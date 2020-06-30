@@ -1,0 +1,13 @@
+<%- include('_header.ejs') -%>
+<form method="POST" action="/login">
+    <div class="form-group">
+        <label for="inputusername">UserName</label>
+        <input type="text" class="form-control" name ="username" id="inputusername" placeholder="Enter Name">
+      </div>
+    <div class="form-group">
+      <label for="inputpassword">Password</label>
+      <input type="password" class="form-control" name ="passwordHash" id="inputpassword" placeholder="Password">
+    </div>
+    <button type="submit" class="btn btn-primary">로그인</button>
+  </form>
+<%- include('_footer.ejs') -%>
