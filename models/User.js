@@ -17,8 +17,8 @@ var userSchema = mongoose.Schema({
     }
 })
 
-userSchema.methods.validPassword = (pw) => {
-    bcrypt.compareSync
+userSchema.methods.validPassword = (password) => {
+    return bcrypt.compareSync(password, this.passwordHash)
 }
 
 userSchema.virtual("password").set((value) => {

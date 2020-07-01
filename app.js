@@ -9,7 +9,6 @@ var flash = require('express-flash-messages')
 var cookieParser = require('cookie-parser')
 var session = require('express-session')
 var passport = require('passport')
-var localStrategy = require('passport-local')
 var User = require('./models/User')
 
 require('dotenv').config()
@@ -49,7 +48,9 @@ passport.deserializeUser((userId, done) => {
         done(err, result)
     })
 })
-var local = new localStrategy((username, password, done) => {
+
+const localStrategy = require('passport-local').Strategy
+const local = new localStrategy((username, password, done) => {
     User.findOne({username})
     .then(user=>{
         if(!user || user.vailPassword(password)){
