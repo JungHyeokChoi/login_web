@@ -1,6 +1,7 @@
 var express = require('express')
 var router = express.Router()
 var User = require('../models/User.js')
+var Noticeboard = require('../models/Noticeboard.js')
 
 var name = {
     a : "CJH",
@@ -80,4 +81,38 @@ router.route('/login')
         })
     })
 
+router.route('/main')
+    .get((req, res, next) => {
+        Noticeboard.find((err, result) => {
+            if(err){
+             console.log(err.body)
+         }
+         res.render('main.ejs', {data:result})
+        })
+    })
+
+    .post((req, res, next) => {
+        var contact = new Noticeboard()
+
+        contact.title = req.body.title
+        contact.description = req.body.description
+        contact.email = req.body.email
+        contact.auther = req.body.auther
+
+        contact.save((err, result) => {
+            if(err){
+                console.log(err.body)
+            }
+            console.log(result)
+            res.send("Success")
+        })
+    })
+
+router.route('/insert')
+    .get((req, res, next) => {
+        res.render('insert')
+    })
+    .post((req, res, next) => {
+
+    })
 module.exports = router;
