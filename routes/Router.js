@@ -87,24 +87,7 @@ router.route('/main')
             if(err){
              console.log(err.body)
          }
-         res.render('main.ejs', {data:result})
-        })
-    })
-
-    .post((req, res, next) => {
-        var contact = new Noticeboard()
-
-        contact.title = req.body.title
-        contact.description = req.body.description
-        contact.email = req.body.email
-        contact.auther = req.body.auther
-
-        contact.save((err, result) => {
-            if(err){
-                console.log(err.body)
-            }
-            console.log(result)
-            res.send("Success")
+         res.render('main', {data:result})
         })
     })
 
@@ -113,6 +96,33 @@ router.route('/insert')
         res.render('insert')
     })
     .post((req, res, next) => {
+        var contact = new Noticeboard()
+
+        contact.title = req.body.title
+        contact.email = req.body.email
+        contact.auther = req.body.auther
+        contact.description = req.body.description
+
+        contact.save((err, result) => {
+            if(err){
+                console.log(err.body)
+            }
+            console.log(result)
+            res.redirect('/main')
+        })
+    })
+
+router.route('/update')
+    .get((req, res, next) => {
+        res.render('update')
+    })
+    .post((req, res, next) => {
 
     })
+
+router.route('/delete')
+    .get((req, res, next) => {
+
+    })
+
 module.exports = router;
