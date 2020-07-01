@@ -1,4 +1,5 @@
 var mongoose = require('mongoose')
+var bcrypt = require('bcryptjs')
 
 var userSchema = mongoose.Schema({
     username : {
@@ -14,6 +15,14 @@ var userSchema = mongoose.Schema({
         type : Date,
         default : Date.now
     }
+})
+
+userSchema.methods.validPassword = (pw) => {
+    bcrypt.compareSync
+}
+
+userSchema.virtual("password").set((value) => {
+    this.passwordHash = bcrypt.hashSync(value, 12)
 })
 
 var User = mongoose.model('user', userSchema)

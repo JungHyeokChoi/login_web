@@ -4,6 +4,10 @@ var path = require('path')
 var bodyParser = require('body-parser')
 var apiRouter = require('./routes/Router')
 const mongoose = require('mongoose');
+mongoose.Promise = global.Promise
+var flash = require('express-flash-messages')
+var cookieParser = require('cookie-parser')
+var session = require('express-session')
 
 require('dotenv').config()
 const port = process.env.PORT
@@ -24,7 +28,11 @@ app.use(bodyParser.urlencoded({extended:true}))
 app.use(bodyParser.json())
 app.use(express.static(__dirname + '/public'))
 app.use('/', apiRouter)
-
+app.use(session({
+    secret : "3ojhtpioteuws90t",
+    resave : true,
+    saveUninitialized : true
+}))
 
 app.listen(port, () => {
     console.log(`Server is Starting at http://localhost:${port}`)

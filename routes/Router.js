@@ -2,6 +2,7 @@ var express = require('express')
 var router = express.Router()
 var User = require('../models/User.js')
 var Noticeboard = require('../models/Noticeboard.js')
+var bcrypt = require('bcryptjs')
 
 var name = {
     a : "CJH",
@@ -37,21 +38,29 @@ router.route('/')
 
 router.route('/signup')
     .get((req, res, next) =>{
-        res.render('signup.ejs')
+        res.render('signup', {message : "true"})
     })
-    .post((req,res,next) => {
-        var contact = new User()
-
-        contact.username = req.body.username
-        contact.passwordHash = req.body.passwordHash
-        contact.email = req.body.email
-        
-        contact.save((err, result) => {
+    .post((req, res, next) => {
+        User.findOne({username : req.body.username}, (err, result) => {
             if(err){
                 console.log(err.body)
+            } else if(result) {
+                console.log(result)
+                res.render('signup', {message : "false", data : result.username})
+            } else {
+                var contact = new User()
+            
+                contact.username = req.body.username
+                contact.passwordHash = bcrypt.hashSync(req.body.passwordHash)
+                contact.email = req.body.email
+                contact.save((err, result)=>{
+                    if(err) {
+                        console.log(err)
+                    }
+                    console.log(result)
+                    res.redirect("/main")
+                })
             }
-            console.log(result)
-            res.redirect(`/login`)
         })
     })
 
@@ -113,7 +122,7 @@ router.route('/insert')
     })
 
 router.route('/update')
-    .get((req, res, next) => {
+    .get((req, res, next) => {        
         res.render('update')
     })
     .post((req, res, next) => {
@@ -122,6 +131,9 @@ router.route('/update')
 
 router.route('/delete')
     .get((req, res, next) => {
+        
+    })
+    .post((req, res, next) => {
 
     })
 
