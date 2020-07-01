@@ -36,6 +36,7 @@ app.use(session({
     saveUninitialized : true
 }))
 app.use(flash())
+app.use(cookieParser())
 
 //Passport
 app.use(passport.initialize())
@@ -61,8 +62,8 @@ var local = new localStrategy((username, password, done) => {
 })
 passport.use("local", local)
 
-//Add Routing File List on Midlware
-app.use('/', apiRouter)
+//Add Routing File List on Middleware
+app.use('/', apiRouter(passport))
 
 app.listen(port, () => {
     console.log(`Server is Starting at http://localhost:${port}`)
