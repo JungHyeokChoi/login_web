@@ -26,8 +26,8 @@
                   <td><%= data[i].description%></td>
                   <td><%= data[i].author%></td>
                   <td><%= data[i].email%></td>
-                  <td><%= data[i].createAt%></td>
-                  <td><a href="/update"><button type="button" class="btn btn-info">Update</button></a></td>
+                  <td><%= moment(data[i].createAt).format('LLLL')%></td>
+                  <td><a href="/update/<%= data[i]._id%>"><button type="button" class="btn btn-info">Update</button></a></td>
                   <td>
                     <form action="/delete/<%= data[i]._id%>" method="POST" onsubmit="return confirm('정말 삭제하시겠습니까?')">
                       <button type="submit" class="btn btn-danger" >Delete</button>

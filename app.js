@@ -51,13 +51,15 @@ passport.deserializeUser((userId, done) => {
     User.findById(userId, (err, result) => { done(err, result) })
 })
 
-const localStrategy = require('passport-local').Strategy
-const local = new localStrategy((username, password, done) => {
+const LocalStrategy = require('passport-local').Strategy
+const local = new LocalStrategy((username, password, done) => {
     User.findOne({ username })
-    .then(user=>{
-        if(!user || user.vailPassword(password)){
+    .then(user => {
+        if(!user || !user.validPassword(password)){
             done(null, false, {message : "Invaild username password"})
-        } else { done(null, user) }
+        } else {
+            done(null, user) 
+        }
     })
     .catch(e => done(e))
 })

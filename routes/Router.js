@@ -2,9 +2,11 @@ var express = require('express')
 var router = express.Router()
 var User = require('../models/User.js')
 var Noticeboard = require('../models/Noticeboard.js')
-var bcrypt = require('bcryptjs')
+var moment = require('moment')
 
-function loggedInOnly(req, res, next){
+moment.locale('ko')
+
+    function loggedInOnly(req, res, next){
     if(req.isAuthenticated()) next()
     else res.redirect('/login')
 } 
@@ -18,6 +20,8 @@ function authenticate(passport){
     router.use((req, res, next) => {
         res.locals.currentUser = req.user
         console.log(res.locals.currentUser)
+        res.locals.errors = req.flash("error");
+        res.locals.infos = req.flash("info");
         next()
     })
 
@@ -36,21 +40,21 @@ function authenticate(passport){
             var email = req.body.email
 
             User.findOne({username : username} , (err, user) => {
-                if(err) { console.log(err) }
-                if(user) {
-                    return res.render('signup',  {message:"false", data:user.username})
-                }                 
-                User.create({ username, password, email })
+                if(err) { return next(err) }
+                if(user) { return res.render('signup',  {message:"false", data:user.username}) }                 
+                 
+                User.create({ username, email, password  })
                 .then(user => {
                     req.login(user , err => {
                         if(err) next(err)
-                        else res.redirect('/')
+                        else res.redirect('/main')
                     })
                 })
-                .catch(e=> {
-                    if(e.name == "ValidationError") {
+                .catch(err=> {
+                    console.log(err)
+                    if(err.name == "ValidationError") {
                         res.redirect("/signup")
-                    } else next(e);
+                    } else next(err);
                 })   
             })
         })
@@ -91,11 +95,8 @@ function authenticate(passport){
     router.route('/main')
         .get(loggedInOnly, (req, res, next) => {
             Noticeboard.find((err, result) => {
-                if(err){
-                console.log(err.body)
-            }
-            console.log(result[0])
-            res.render('main', {data:result})
+                if(err) { console.log(err) }
+                res.render('main', {data:result, moment})
             })
         })
 
@@ -120,12 +121,26 @@ function authenticate(passport){
             })
         })
 
-    router.route('/update')
-        .get(loggedInOnly, (req, res, next) => {        
-            res.render('update')
+    router.route('/update/:id')
+        .get(loggedInOnly, (req, res, next) => {   
+            var id = req.params.id  
+
+            Noticeboard.findOne({_id : id}, (err, result) => {
+                 if(err) { return next(err) }
+                 res.render('update', {data : result})
+            })
         })
         .post(loggedInOnly, (req, res, next) => {
+            var id = req.params.id
+            var title = req.body.title
+            var author = req.body.author
+            var email = req.body.email
+            var description = req.body.description
 
+            Noticeboard.findOneAndUpdate({_id : id}, {title, author, email, description}, (err, result) => {
+                if(err) { return next(err) }
+                res.redirect('/main')
+            })
         })
 
     router.route('/delete/:id')
