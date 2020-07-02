@@ -1,17 +1,23 @@
 <%- include('_header.ejs') -%>
-<form method="POST" action="/signup">
-    <div class="form-group">
-        <label for="inputusername">UserName</label>
-        <input type="text" class="form-control" name ="username" id="inputusername" placeholder="Enter Name">
+<% if(message == "false") { %>
+<script>
+  alert("<%= data %>의 ID는 이미 존재합니다.")
+</script>
+<% } %>
+  <form method="POST" action="/signup">
+      <div class="form-group">
+          <label for="inputusername">UserName</label>
+          <input type="text" class="form-control" name ="username" id="inputusername" placeholder="Enter Name">
+        </div>
+      <div class="form-group">
+        <label for="inputemail">Email address</label>
+        <input type="email" class="form-control" name ="email" id="inputemail" aria-describedby="emailHelp" placeholder="Enter email">
       </div>
-    <div class="form-group">
-      <label for="inputemail">Email address</label>
-      <input type="email" class="form-control" name ="email" id="inputemail" aria-describedby="emailHelp" placeholder="Enter email">
-    </div>
-    <div class="form-group">
-      <label for="inputpassword">Password</label>
-      <input type="password" class="form-control" name ="passwordHash" id="inputpassword" placeholder="Password">
-    </div>
-    <button type="submit" class="btn btn-primary">회원가입</button>
+      <div class="form-group">
+        <label for="inputpassword">Password</label>
+        <input type="password" class="form-control" name ="password" id="inputpassword" placeholder="Enter Password">
+      </div>
+      <button type="submit" value="Sign up" class="btn btn-primary">Sign Up</button>
+      <a href="/"><button type="button" value="Cancel" class="btn btn-secondary">Cancel</button></a>
   </form>
 <%- include('_footer.ejs') -%>
