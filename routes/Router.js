@@ -22,47 +22,29 @@ function authenticate(passport){
     })
 
     router.route('/')
-    .get(loggedInOnly, (req, res, next) => {
-        User.find((err, result) => {
-            if(err) console.log(err.body)
-            res.render('index.ejs', {data:result.username})
-        })
+    .get((req, res, next) => {
+        res.render('index')
     })
-    // .post(loggedInOnly, (req, res) => {
-    //     var contact = new User()
-
-    //     contact.username = req.body.username
-    //     contact.passwordHash = req.body.passwordHash
-    //     contact.email = req.body.email
-
-    //     contact.save((err, result) => {
-    //         if(err){
-    //             console.log(err.body)
-    //         }
-    //         console.log(result)
-    //         res.send("Success")
-    //     })
-    // })
 
     router.route('/signup')
         .get(loggedOutOnly, (req, res, next) =>{
             res.render('signup', {message : "true"})
         })
-        .post((req, res , next)=>{
+        .post((req, res ,next) => {
             var username = req.body.username
-            var passwordHash =bcrypt.hashSync(req.body.passwordHash)
+            var password = req.body.password
             var email = req.body.email
 
             User.findOne({username : username} , (err, user) => {
-                if(err) console.log(err)
+                if(err) { console.log(err) }
                 if(user) {
                     return res.render('signup',  {message:"false", data:user.username})
                 }                 
-                User.create({ username,passwordHash, email })
+                User.create({ username, password, email })
                 .then(user => {
-                    req.login((user , err)=>{
+                    req.login(user , err => {
                         if(err) next(err)
-                        else res.redirect('/main')
+                        else res.redirect('/')
                     })
                 })
                 .catch(e=> {
@@ -75,13 +57,13 @@ function authenticate(passport){
 
     router.route('/login')
         .get(loggedOutOnly, (req, res, next) => {
-            res.render('login.ejs')
+            res.render('login')
         })
-        .post(loggedOutOnly, 
+        .post(
             passport.authenticate("local", {
                 successRedirect : "/main",
                 failureRedirect : "/login",
-                failureflash : true    
+                failureFlash : true    
             })
         )
         // .post(async (req, res, next) => {
@@ -112,6 +94,7 @@ function authenticate(passport){
                 if(err){
                 console.log(err.body)
             }
+            console.log(result[0])
             res.render('main', {data:result})
             })
         })
@@ -124,8 +107,8 @@ function authenticate(passport){
             var contact = new Noticeboard()
 
             contact.title = req.body.title
+            contact.author = req.body.author
             contact.email = req.body.email
-            contact.auther = req.body.auther
             contact.description = req.body.description
 
             contact.save((err, result)=>{
@@ -141,20 +124,22 @@ function authenticate(passport){
         .get(loggedInOnly, (req, res, next) => {        
             res.render('update')
         })
-        .post((req, res, next) => {
-
-        })
-
-    router.route('/delete')
-        .get(loggedInOnly, (req, res, next) => {
-        })
         .post(loggedInOnly, (req, res, next) => {
 
         })
 
+    router.route('/delete/:id')
+        .post(loggedInOnly, (req, res) => {
+            var id = req.params.id
+            Noticeboard.findOneAndDelete({_id : id}, (err, result) => {
+                if(err) console.log(err)
+                res.redirect('/main')
+            })
+        })
+
     router.all("/logout", (req, res, next) => {
         req.logout()
-        res.redirect('/login')
+        res.redirect('/')
     })
 
     //Error Handler

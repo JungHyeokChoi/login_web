@@ -1,5 +1,6 @@
 var mongoose = require('mongoose')
 var bcrypt = require('bcryptjs')
+const uniqueValidator = require("mongoose-unique-validator");
 
 var userSchema = mongoose.Schema({
     username : {
@@ -16,6 +17,8 @@ var userSchema = mongoose.Schema({
         default : Date.now
     }
 })
+
+userSchema.plugin(uniqueValidator)
 
 userSchema.methods.validPassword = (password) => {
     return bcrypt.compareSync(password, this.passwordHash)
