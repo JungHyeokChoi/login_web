@@ -17,8 +17,9 @@ var apiRouter = require('./routes/Router')
 
 //MongoDB Connection
 dotenv.config()
-var pw = process.env.PASSWORD
-var url = `mongodb+srv://root:${pw}@cluster0.lkryw.mongodb.net/MyDB?retryWrites=true&w=majority`
+var password = process.env.PASSWORD
+var DB = process.env.DB
+var url = `mongodb+srv://root:${password}@cluster0.lkryw.mongodb.net/${DB}?retryWrites=true&w=majority`
 mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true});
 
 // process.cwd() 현재 경로 찾기
@@ -37,7 +38,12 @@ app.use(session({
     saveUninitialized : true
 }))
 
+/*  
+   Set the absolute path when using params. 
+   This is Because the Request URL error occurs.
+*/ 
 app.use(express.static(__dirname + '/public'))
+app.use(express.static(path.join(__dirname, 'public/css/')));
 app.use(flash())
 
 //Passport

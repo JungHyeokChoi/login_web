@@ -1,10 +1,5 @@
 <%- include('_header.ejs') -%>
 <section class="col-xs-12">
-    <div class="panel panel-primary">
-      <div class="panel-heading">
-      </div>
-    </div>
-
       <table class="table">
           <thead class="thead-dark">
             <tr>
@@ -27,7 +22,9 @@
                   <td><%= data[i].author%></td>
                   <td><%= data[i].email%></td>
                   <td><%= moment(data[i].createAt).format('LLLL')%></td>
-                  <td><a href="/update/<%= data[i]._id%>"><button type="button" class="btn btn-info">Update</button></a></td>
+                  <td>
+                    <a href="/update/<%= data[i]._id%>"><button type="submit" class="btn btn-info">Update</button></a>
+                  </td>
                   <td>
                     <form action="/delete/<%= data[i]._id%>" method="POST" onsubmit="return confirm('정말 삭제하시겠습니까?')">
                       <button type="submit" class="btn btn-danger" >Delete</button>
@@ -36,7 +33,10 @@
             </tr>
             <% } %>
           </tbody>
-      </table>
-      <a href="/insert"><button type="button" class="btn btn-primary">Create</button></a>
+          <tr></tr>
+      </table>      
+      <div class= "mx-auto text-center">
+        <a href="/insert"><button type="button" class="btn btn-primary">Create</button></a>
+      </div>
 </section>
 <%- include('_footer.ejs') -%>

@@ -127,6 +127,7 @@ function authenticate(passport){
 
             Noticeboard.findOne({_id : id}, (err, result) => {
                  if(err) { return next(err) }
+                 console.log(result)
                  res.render('update', {data : result})
             })
         })
