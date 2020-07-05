@@ -97,7 +97,19 @@ function authenticate(passport){
             Noticeboard.find((err, result) => {
                 if(err) { console.log(err) }
                 res.render('main', {data:result, moment})
-            })
+            }).sort({"title" : 1})
+        })
+        .post(loggedInOnly, (req ,res, next) => {
+            var search = req.body.search
+            // //All keys search
+            // var allKeys = Noticeboard.findOne()
+            // var keys = []
+            // for (key in allKeys.schema.obj) keys.push(key)
+
+            Noticeboard.find({ 'title' : search }, (err, result) =>{
+                if(err) { console.log(err) }
+                res.render('main', {data:result, moment})
+            }).sort({"title" : 1})
         })
 
     router.route('/insert')
