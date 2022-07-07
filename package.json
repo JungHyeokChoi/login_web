@@ -20,7 +20,7 @@
     "express-flash-messages": "^0.1.1",
     "express-session": "^1.17.1",
     "html": "^1.0.0",
-    "moment": "^2.27.0",
+    "moment": "^2.29.4",
     "moment-timezone": "^0.5.31",
     "mongoose": "^5.9.20",
     "mongoose-unique-validator": "^2.0.3",
